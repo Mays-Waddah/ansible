@@ -1,1 +1,24 @@
+we have to install vargent.
+ $ vagrant up
+ $ vagrant ssh mays
+ $ cd /etc/ansible                 #we shoul head to the directory to download the dependencies
+ $ ansible-galaxy install -r requirements.yml    # Zabbix Collection contains the roles for installing the Zabbix Server, Proxy, Agent, Javagateway and the Frond-end.
 
+----# Installing Zabbix Server #----
+ $ ansible-playbook -i hosts zabbix-server.yml
+then we set groupsinside inventory file :
+ cat > inventory.txt
+ [zabbix_server]
+target-1 ansible_host=172.20.48.81
+
+[zabbix_database]
+node-2 ansible_host=localhost
+
+[zabbix_proxy]
+node-3 ansible_host=10.10.1.13
+
+[database:children]
+zabbix_database
+zabbix_proxy
+
+$ansible-galaxy install dj-wasabi.zabbix-server
