@@ -6,3 +6,35 @@ https://www.softwaretestinghelp.com/ansible-playbooks-ansible-vaults/
 
 https://www.youtube.com/watch?v=cHCCoC-M31Q
 
+
+adding repo :
+---
+- hosts: all
+  tasks:
+
+    - name: Add zabbix repo
+      yum_repository:
+        name: zabbix
+        description: a repo to install and configure zabbix
+        baseurl: 
+        gpgcheck: yes
+        gpgkey: file:///etc/pki/RPM-GPG-KEY-example
+
+------------------------------
+zabbix :
+cd /etc/ansible/hosts
+-add my server
+-hosts on ansible  --done 
+-install mysql 
+-enable mysql (systemctl)
+-for conf -> /usr/bin/mysql_secure_installation 
+
+installing the repo (by rpm link..)
+dnf clean all
+install command (zabbix,apache,se,agent)
+
+--database creatin 
+
+zcat
+
+
