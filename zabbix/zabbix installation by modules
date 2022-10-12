@@ -3,5 +3,43 @@
   PHP with required extensions
   MySQL/ MariaDB server
 ***********************************************
+- create the host inventory file that has the ip of the target machine we want to install softwares on .
+
+$ ssh-keygen
+
+To copy the generated SSH key to the remote node run the command.
+$ ssh-copy-id username@192.-ip for the target/host-
+
+Now use Ansible to ping the remote node as shown.
+$ ansible -i /etc/ansible/hosts web -m ping  
+************************************************
+[root@ansible-controller mays]# cat apache-playbook
+---
+- name: setup webserver
+  hosts: all
+  become: true
+  tasks:
+    - name: httpd installed
+      ansible.builtin.yum:
+        name: httpd
+        state: latest
+
+    - name: custom index.html
+      ansible.builtin.copy:
+        dest: /var/www/html/index.html
+        content: |
+                    Custom Web Page
+    - name: httpd service enabled
+      ansible.builtin.service:
+        name: httpd
+        enabled: true
+        state: started
+
+    - name: open firewall
+      ansible.posix.firewalld:
+        service: http
+        state: enabled
+        immediate: true
+        permanent: true
 
 
