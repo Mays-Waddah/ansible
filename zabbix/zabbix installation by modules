@@ -1,7 +1,4 @@
--Prerequisites
-  Apache web server
-  PHP with required extensions
-  MySQL/ MariaDB server
+apache configuration 
 ***********************************************
 - create the host inventory file that has the ip of the target machine we want to install softwares on .
 
