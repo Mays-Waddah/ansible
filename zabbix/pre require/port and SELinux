@@ -1,5 +1,5 @@
 ---
-- name: setup SELinux and make sure port is opened
+- name: Firewald and SELinux 
   hosts: all
   become: true
   tasks:
@@ -13,3 +13,11 @@
     - name: Disable SELinux
       ansible.posix.selinux:
         state: disabled
+******************************************
+to check the target node if the port is really opened , rmrmber :
+systemctl-cmd --state
+firewall-cmd --reload
+firewall-cmd --list-ports
+
+it should show : 80/tcp
+Done.
