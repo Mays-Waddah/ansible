@@ -1,0 +1,11 @@
+--- 
+- name: "firewall check"
+  ansible.posix.firewalld: 
+    permanent: true
+    port: 80/tcp
+    state: enabled
+  
+
+- name: Disable SELinux
+  ansible.posix.selinux:
+    state: disabled
