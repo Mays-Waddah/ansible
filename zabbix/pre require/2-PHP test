@@ -17,6 +17,23 @@ version neede : 7.4.0 or later,
       mirrorlist: http://cdn.remirepo.net/enterprise/$releasever/safe/mirror
       gpgcheck: no
       gpgkey: http://rpms.remirepo.net/RPM-GPG-KEY-remi
+      
+      - name: cpmplete php installed
+      ansible.builtin.yum:
+        name:
+          - php-pear
+          - php-cgi
+          - php-common
+          - php-mbstring
+          - php-snmp
+          - php-gd
+          - php-pecl-mysql
+          - php-xml
+          - php-mysql
+          - php-gettext  #i had to delete it
+          - php-bcmath   #
+      state: present
+
 _______________
 ---
 - name: setup php
