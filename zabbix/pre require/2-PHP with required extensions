@@ -5,58 +5,64 @@ version neede : 7.4.0 or later,
   hosts: all
   become: true
   tasks:
-    - name: php installed
+    - name: cpmplete php installed
       ansible.builtin.yum:
-        name: php
+        name: php php-pear php-cgi php-common php-mbstring php-snmp php-gd php-pecl-mysql php-xml php-mysql php-gettext php-bcmath
         state: latest
-_______________---
-
+  - name: Add repository
+    ansible.builtin.yum_repository:
+      name: remi
+      description: remi safe repo
+      baseurl: http://rpms.remirepo.net/enterprise/$releasever/safe/$basearch/
+      mirrorlist: http://cdn.remirepo.net/enterprise/$releasever/safe/mirror
+      gpgcheck: no
+      gpgkey: http://rpms.remirepo.net/RPM-GPG-KEY-remi
+_______________
 ---
-- hosts: webservers
-  sudo: yes
+- name: setup php
+  hosts: all
+  become: true
   tasks:
-  - name: yum update
-    action: yum name=* state=latest
-  - name: yum install epel
-    yum: name=epel-release.noarch state=latest
-  - name: download remi repo rpm
-    get_url: url=http://rpms.famillecollet.com/enterprise/remi-release-7.rpm dest=/root/  
-  - name: install remi repo rpm
-    yum: name=/root/remi-release-7.rpm state=present
-  - name: install php
-    yum: enablerepo=remi,remi-php56 name=php-mssql,php-pear,php,php-pdo,php-pecl-redis,php-xml,php-pecl-zip,php-pecl-jsonc,php-pecl-igbinary,httpd,httpd-tools,php-mbstring state=latest
-  - name: install rsync
-    yum: name=rsync state=latest
-  - name: change web root permission
-    sudo: yes
-    file: path=/var/www group=apache mode=0770 state=directory
-  - name: change web root permission
-    sudo: yes
-    file: path=/var/www/html group=apache mode=0770 state=directory
-  - name: change user permission
-    sudo: yes
-    user: name=myuser groups=apache
-  - name: change php ini
-    ini_file: dest=/etc/php.ini
+   - name: download remi repo by rpm
+     get_url: 
+      url=http://rpms.famillecollet.com/enterprise/remi-release-7.rpm 
+     dest=/root/ 
+     state: present
+ 
+   - name: Install remi repo rpm from a remote repo
+     ansible.builtin.yum:
+       name: https://rpms.remirepo.net/enterprise/remi-release-centos-6-0.el6noarch.rpm
+       state: present
+       
+   - name: cpmplete php installed
+     ansible.builtin.yum:
+       name: php php-pear php-cgi php-common php-mbstring php-snmp php-gd php-pecl-mysql php-xml php-mysql php-gettext php-bcmath
+       state: latest
+   
+   - name: Import gpg-key from a url
+     ansible.builtin.rpm_key:
+       state: present
+       key: https://rpms.remirepo.net/RPM-GPG-KEY-remi2018
+
+   - name: change php ini
+     ini_file: dest=/etc/php.ini
               section=Date
               option=date.timezone
               value=Etc/UTC
-    ini_file: dest=/etc/php.ini
+     ini_file: dest=/etc/php.ini
               section=PHP
               option=error_reporting
               value='E_ALL & ~E_NOTICE'
-    ini_file: dest=/etc/php.ini
+     ini_file: dest=/etc/php.ini
               section=PHP
               option=short_open_tag
               value=On
-  - name: remove blank
-    replace: dest=/etc/freetds.conf.bak
+   - name: remove blank
+     replace: dest=/etc/freetds.conf.bak
              backup=yes
              regexp='^[\s\t]+(?=[\S])'
-  - name: change freetds conf
-    ini_file: dest=/etc/freetds.conf.bak
+   - name: change freetds conf
+     ini_file: dest=/etc/freetds.conf.bak
               section=global
               option="tds version"
               value=8.0
-  - name: enable httpd
-    service: name=httpd enabled=yes state=started
