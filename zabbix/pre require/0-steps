@@ -20,7 +20,7 @@ $ ssh-keygen
 
 To copy the generated SSH key to the remote node run the command.
 $ ssh-copy-id username@192.-ip for the target/host-
-
+ssh-copy-id root@192.168.1.128
 Now use Ansible to ping the remote node as shown.
 $ ansible -i /etc/ansible/hosts web -m ping  
 ************************************************
