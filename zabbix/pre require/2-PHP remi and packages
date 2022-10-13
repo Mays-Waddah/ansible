@@ -1,5 +1,66 @@
 version neede : 7.4.0 or later,
 8.0, 8.1
+
+---
+- name: setup php
+  hosts: all
+  become: true
+  tasks:
+    - name: Add repository
+      ansible.builtin.yum_repository:
+        name: remi
+        description: remi safe repo
+        baseurl: http://rpms.remirepo.net/enterprise/$releasever/safe/$basearch/
+        mirrorlist: http://cdn.remirepo.net/enterprise/$releasever/safe/mirror
+        gpgcheck: no
+        gpgkey: http://rpms.remirepo.net/RPM-GPG-KEY-remi
+
+
+    - name: Download  packages
+      ansible.builtin.yum:
+        name:
+          - php-pear
+        state: latest
+
+    - name: Download  packages 2
+      ansible.builtin.yum:
+        name:
+          - php-common
+        state: latest
+
+    - name: Download  packages 3
+      ansible.builtin.yum:
+        name:
+          - php-mbstring
+        state: latest
+
+    - name: Download  packages 4
+      ansible.builtin.yum:
+        name:
+          - php-snmp
+        state: latest
+    - name: Download  packages 5
+      ansible.builtin.yum:
+        name:
+          - php-gd
+        state: latest
+    - name: Download  packages 6
+      ansible.builtin.yum:
+        name:
+          - php-pecl-mysql
+        state: latest
+    - name: Download  packages 7
+      ansible.builtin.yum:
+        name:
+          - php-xml
+        state: latest
+
+    - name: Download  packages 8
+      ansible.builtin.yum:
+        name:
+          - php-mysql
+        state: latest
+*************************************************
 ---
 - name: setup database server
   hosts: all
