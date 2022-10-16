@@ -1,33 +1,29 @@
 
 ---
-- name: Install mysql server 8 and initialize
+- name: Install database server  and initialize
   hosts: all
   gather_facts: false
   become: true
-  vars:
-    mysql_root_password: 'secure-root-pw'
-    ansible_python_interpreter: /usr/bin/python3
   tasks:
-    - name: Ensure required packages are installed
-      dnf:
-        name:
-          - mysql-server
-          - mysql-devel
-          - python39
-          - python39-devel
-          - python39-pip
-          - gcc
+    - name: get mysql repo
+      ansible.builtin.get_url:
+        url: https://dev.mysql.com/get/mysql80-community-release-el8-1.noarch.rpm
         state: latest
+        
+    - name: Install mysql package from that remote repo
+      ansible.builtin.yum:
+        name: mysql80-community-release
+        enablerepo: testing
+        state: present
 
     - name: Install Required pip modules
-      pip:
-        name:
-          - PyMySQL
+      ansible.builtin.pip:
+        name: PyMySQL
         state: present
         executable: pip3
 
     - name: Ensure mysql service is running
-      systemd:
+      ansible.builtin.systemd
         name: mysqld
         state: restarted
         enabled: yes
