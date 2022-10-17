@@ -144,3 +144,54 @@ _______________
               section=global
               option="tds version"
               value=8.0
+              ____________________________________________
+              
+[root@ansible-controller mays]# cat php-with-extensions.yml
+---
+- hosts: all
+  tasks:
+  - name: yum update
+    action: yum name=*
+    state: latest
+  - name: yum install epel
+    ansible.builtin.yum_repository:
+      name: epel
+      description: EPEL YUM repo
+      baseurl: https://download.fedoraproject.org/pub/epel/$releasever/$basearch/
+
+  - name: download remi repo rpm
+    get_url: url=http://rpms.famillecollet.com/enterprise/remi-release-7.rpm dest=/root/
+  - name: install remi repo rpm
+    yum: name=/root/remi-release-7.rpm
+    state: present
+
+  - name: install php
+    yum: enablerepo=remi,remi-php56 name=php-mssql,php-pear,php,php-pdo,php-pecl-redis,php-xml,php-pecl-zip,php-pecl-jsonc,php-pecl-igbinary,httpd,httpd-tools,php-mbstring state=latest
+  - name: install rsync
+    yum: name=rsync
+    state: latest
+
+  - name: change php ini
+    ini_file: dest=/etc/php.ini
+              section=Date
+              option=date.timezone
+              value=Etc/UTC
+    ini_file: dest=/etc/php.ini
+              section=PHP
+              option=error_reporting
+              value='E_ALL & ~E_NOTICE'
+    ini_file: dest=/etc/php.ini
+              section=PHP
+              option=short_open_tag
+              value=On
+  - name: remove blank
+    replace: dest=/etc/freetds.conf.bak
+             backup=yes
+             regexp='^[\s\t]+(?=[\S])'
+  - name: change freetds conf
+    ini_file: dest=/etc/freetds.conf.bak
+              section=global
+              option="tds version"
+              value=8.0
+
+
