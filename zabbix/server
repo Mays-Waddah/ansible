@@ -3,6 +3,19 @@ we have to install vargent.
  $ vagrant ssh mays
  $ cd /etc/ansible                 #we shoul head to the directory to download the dependencies
  $ ansible-galaxy install -r requirements.yml    # Zabbix Collection contains the roles for installing the Zabbix Server, Proxy, Agent, Javagateway and the Frond-end.
+---------------------------------------------------------------------------------------------
+---
+- name: add zabbix repo
+  hosts: all
+  gather_facts: false
+  become: true
+  tasks:
+
+    - name: Add zabbix repository
+      ansible.builtin.yum_repository:
+        name: epel
+        description: zabbix repo
+        baseurl: http://repo.zabbix.com/zabbix/5.0/rhel/8/$basearch/
 
 ----# Installing Zabbix Server #----
  $ ansible-playbook -i hosts zabbix-server.yml
