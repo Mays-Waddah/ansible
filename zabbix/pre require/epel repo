@@ -8,14 +8,4 @@
         name: epel
         description: EPEL YUM repo
         baseurl: https://download.fedoraproject.org/pub/epel/$releasever/$basearch/
-        ***********
-        or :
-        ***********
-        
-- name: Install epel-release rpm from a remote repo
-  ansible.builtin.yum:
-    name:  http://rpms.remirepo.net/enterprise/remi-release-7.rpm
-    state: present 
-    ******************************************************************************
-       
-        -then we should use tar to install it if it was compressed but here it is not 
+      
