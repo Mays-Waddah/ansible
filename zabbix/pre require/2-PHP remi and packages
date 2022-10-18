@@ -80,7 +80,7 @@
           - php-xml
           - php-mysql
           - php-gettext  #i had to delete it
-          - php-bcmath   #
+          - php-bcmath   
       state: present
 
  
